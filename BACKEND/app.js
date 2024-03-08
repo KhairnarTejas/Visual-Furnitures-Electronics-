@@ -1,41 +1,42 @@
-const express = require('express');
+
+const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const mongoose = require('mongoose');
-
-const path = require("path");                        
+const mongoose = require("mongoose");
+const path = require("path");
+const ejsMate = require("ejs-mate");
+const MongoStore = require("connect-mongo");
+const methodOverride = require("method-override");
+                      
 app.set("views" , path.join(__dirname , "views"));   
 app.set("view engine" , "ejs");
 
 const Electronic = require("./models/electronic.js");
 
-const MONGO_URL = "mongodb+srv://Tejas:<cKqASwGX8OfGNf5j>@visualfurniture.neyawyu.mongodb.net/";
+// const dbUrl = process.env.ATLAS_URL
 
-const methodOverride = require("method-override"); 
+
 app.use(methodOverride("_method"));            
 
-
-const ejsMate = require("ejs-mate");       
+      
 app.engine("ejs" , ejsMate);
 
 app.use(express.static(path.join(__dirname , "public")));  
 require('dotenv/config')
 // const api =process.env.API_URL
+dbUrl ="mongodb://localhost:27017";
 
-main()                                  
-.then(()=>{
+main()
+    .then(() => {
+        console.log("Connected to db.");
+    })
+    .catch(err => console.log(err));
 
-    console.log("Connect to DB");
-})
-.catch((err) => {
-    console.log(err);
-});
-
-async function main() {                       
-    await mongoose.connect(MONGO_URL);
-      
+async function main() {
+    await  mongoose.connect(dbUrl);
 }
+
 
 //Middleware
 app.use(bodyParser.json())
