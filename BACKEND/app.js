@@ -13,7 +13,7 @@ app.set("views" , path.join(__dirname , "views"));
 app.set("view engine" , "ejs");
 
 const Electronic = require("./models/electronic.js");
-
+const authRouter = require("./routes/authRoute.js");
 // const dbUrl = process.env.ATLAS_URL
 
 
@@ -42,6 +42,8 @@ async function main() {
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
 
+
+app.use("/api/user", authRouter)
 app.get(`/`,(req,res) => {
     const product ={
         id: 1,
