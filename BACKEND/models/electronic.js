@@ -1,59 +1,59 @@
-
-const mongoose = require("mongoose"); 
-
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const electronicSchema = new Schema(
-
-    {
-        electronic_product :{
-
-            type : String,
-            required : true,
+const productSchema = new Schema({
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    image: {
+        url: String,
+        filename: String,
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+    category: {
+        type: String,
+        enum: ['furniture', 'electronics'],
+        required: true,
+    },
+    subcategory: {
+        type: String,
+        required: function () {
+            return this.category === 'furniture';
         },
-        electronic_product_company:{
-
-            type: String ,
+        enum: ['kitchen', 'hall', 'bedroom'],
+    },
+    subcategory: {
+        type: String,
+        required: function () {
+            return this.category === 'electronics';
         },
-        electronic_product_image:{
-
-            //type: String,       
-            //filename: String,   
-
-            
-           type: String,
-           default:
-            "https://m.media-amazon.com/images/I/61+r3+JstZL._AC_UF1000,1000_QL80_.jpg",
-            set : (v) => v === "" 
-            ? "https://m.media-amazon.com/images/I/61+r3+JstZL._AC_UF1000,1000_QL80_.jpg"
-            : v,
-
+        enum: ['fan', 'TV', 'mobile'],
+    },
+    quantity: {
+        type: Number,
+        default: 1, // Default quantity to 1 if not specified
+    },
+    seller: {
+        name: String,
+        contact: String,
+        // You can add more seller details if needed
+    },
+    reviews: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Review',
         },
+    ],
+    
+});
 
-        electronic_product_size :{
-            type : String,
-        },
-        electronic_product_price :{
-            type : Number,
-        },
-  
-
-        reviews :[
-            {
-                type: Schema.Types.ObjectId,
-                ref : "Review",
-            },
-        ],
-        owner: {
-                type: Schema.Types.ObjectId,
-                ref : "User",
-
-        }
-    }
-);
-
-
-
-
-const Electronic  = mongoose.model("Electronic" , electronicSchema);
-module.exports = Electronic;
+const Product = mongoose.model("Product", productSchema);
+module.exports = Product;
