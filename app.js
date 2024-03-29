@@ -12,8 +12,8 @@ const methodOverride = require("method-override");
 app.set("views" , path.join(__dirname , "views"));   
 app.set("view engine" , "ejs");
 
-const Electronic = require("./models/electronic.js");
-const User = require("./routes/user.js");
+const Product = require("./models/product.js");
+// const User = require("./routes/user.js");
 // const dbUrl = process.env.ATLAS_URL
 
 
@@ -38,20 +38,42 @@ async function main() {
 }
 
 
+
+// for using passport
+const passport=require("passport");// require passport for authentication
+const LocalStrategy=require("passport-local");
+const User=require("./models/user.js");
+
 //Middleware
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
 
+//productRouter
+const productRouter = require("./routes/product.js");
 
-app.use("/api/user", authRouter)
-app.get(`/`,(req,res) => {
-    const product ={
-        id: 1,
-        name: 'Fridge',
-        image: 'url',
-    }
-    res.send(product);
-})
+
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname,"views"));
+app.engine("ejs", ejsMate);
+app.use(express.urlencoded({
+    extended: true
+}));
+app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "/public")));
+
+
+app.use("/product",productRouter);
+ 
+// app.use("/api/user", authRouter)
+// app.get(`/`,(req,res) => {
+//     const product ={
+//         id: 1,
+//         name: 'Fridge',
+//         image: 'url',
+//     }
+//     res.send(product);
+// })
 app.listen(3000, ()=>{
     console.log("Server is running on port : 3000")
 })
